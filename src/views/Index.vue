@@ -1,6 +1,6 @@
 <template>
-    <div id="index">
-        <div class="test">Index</div>
+    <div>
+        <div class="test">{{count}}</div>
     </div>
 </template>
 
@@ -8,7 +8,6 @@
   import axios from 'axios';
 
   export default {
-    name: 'index',
     data() {
       return {
         count: 0,
@@ -17,12 +16,11 @@
         }
       };
     },
-
-    created: () => {
-        console.log(this.methods);
+    created: function () {
+      console.log(this.getMemberList);
     },
     methods: {
-      getMemberList: () => {
+      getMemberList () {
         console.log(axios);
       },
     }
