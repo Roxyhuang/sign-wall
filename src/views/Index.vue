@@ -5,7 +5,27 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
-    name: 'index'
+    name: 'index',
+    data() {
+      return {
+        count: 0,
+        list: {
+
+        }
+      };
+    },
+
+    created: () => {
+        console.log(this.methods);
+    },
+    methods: {
+      getMemberList: () => {
+        console.log(axios);
+      },
+    }
+
   }
 </script>
