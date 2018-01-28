@@ -39,6 +39,7 @@
 <script>
   import axios from 'axios';
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
+  import { ModelObj } from 'vue-3d-model'
   import getQueryString from '../utils/utils';
   import 'swiper/dist/css/swiper.css'
   import '../stlye/list.less';
@@ -47,6 +48,7 @@
     components: {
       swiper,
       swiperSlide
+      ModelObj,
     },
     data() {
       return {
