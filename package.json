@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel register.html",
+    "dev": "parcel register.html list.html",
     "build": "parcel build register.html --public-url ./"
   },
   "repository": {
@@ -33,9 +33,9 @@
   "dependencies": {
     "axios": "^0.17.1",
     "mint-ui": "^2.2.13",
+    "three": "^0.89.0",
+    "tween": "^0.9.0",
     "vue": "^2.5.13",
-    "vue-3d-model": "0.0.15",
-    "vue-awesome-swiper": "^3.1.2",
     "vue-router": "^3.0.1"
   }
 }

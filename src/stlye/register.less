@@ -1,25 +1,168 @@
+html {
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #c53b3a ;
+  width: 100%;
+  height: 100%;
+}
+
 #register {
+  position: relative;
+  background: url("../../public/assets/img/bg1@2x.png");
+  width: 100%;
+  height: 100%;
   .container {
+    position: absolute;
+    background: url("../../public/assets/img/form.png");
+    background-size: contain;
     display: flex;
     flex-direction: column;
     align-items: center;
+    top: 165px;
+    width: 312px;
+    height: 390px;
+    left: 50%;
+    margin-left: -156px;
     .user {
-      width: 2rem;
-      height: 2rem;
+      width: 118px;
+      height: 118px;
       border-radius: 50%;
-      margin-top: .5rem;
+      margin-top: -46px;
+    }
+    .formItem {
+      margin-top: .4rem;
+      display: flex;
+      align-items: center;
+      width: 240px;
+      border-bottom: solid 1px #d4d5d6; /*no*/
+      padding: 10px;
+      .icon {
+        width: 24px;
+        height: 25.5px;
+      }
+    }
+    .wxname {
+      font-size: 24px;
+      margin-top: 18px;
+      max-width:  260px;
+      font-family:"Noto Sans CJK SC", "Source Han Sans CN";
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .name {
-      margin-top: .4rem;
-      font-size: .4rem;
-      text-align: center;
-    }
-    .team {
+      font-size: 20px;
+      text-align: left;
+      width: 100%;
+      border: none;
+      margin-left: 18px;
+      font-family:"Noto Sans CJK SC", "Source Han Sans CN";
 
     }
+    .dept {
+      font-size: 20px;
+      width: 180px;
+      text-align: left;
+      margin-left: 18px;
+      font-family:"Noto Sans CJK SC", "Source Han Sans CN";
+    }
+
+    .deptHolder {
+      font-size: 20px;
+      width: 180px;
+      text-align: left;
+      margin-left: 18px;
+      color: #d6d7d8;
+      font-family:"Noto Sans CJK SC", "Source Han Sans CN";
+    }
+
+
+    .arrow {
+      width: 16.5px;
+      height: 8px;
+      transform:rotate(0deg);
+      //background: url("../../public/assets/img/arrow@2x.png") no-repeat scroll right center transparent;
+    }
     .confirm {
-      margin-top: 1rem;
+      width: 285px;
+      height: 89.5px;
+      border: none;
+      background: url('../../public/assets/img/btn-default@2x.png');
+      background-size: 285px 89.5px;
+      background-repeat: no-repeat;
+      background-position-x: center;
+      background-position-y: center;
+      margin-top: 24px;
+      &:active {
+        width: 285px;
+        height: 89.5px;
+        border: none;
+        background: url('../../public/assets/img/btn-press-@2x.png');
+        background-size: 285px 89.5px;
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-position-y: center;
+        margin-top: 24px;
+      }
+    }
+  }
+  .modal {
+    position: absolute;
+    left: 0;
+    top:0 ;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44,21,11,.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .success {
+      width: 286.5px;
+      height: 355px;
+    }
+
+    .close {
+      width: 35px;
+      height: 35px;
+      position: absolute;
+      top: 42px;
+      right: 30px;
     }
   }
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
+  input::-webkit-input-placeholder { /* WebKit browsers*/
+    color: #d6d7d8;
+    font-size: 20px;
+  }
+  input:-moz-placeholder {  /* Mozilla Firefox 4 to 18*/
+    color: #cecece;
+    font-size: 20px;
+  }
+  input::-moz-placeholder {  /* Mozilla Firefox 19+*/
+    color: #d6d7d8;
+    font-size: 20px;
+  }
+  input:-ms-input-placeholder { /* Internet Explorer 10+*/
+    color: #d6d7d8;
+    font-size: 20px;
+  }
 }
