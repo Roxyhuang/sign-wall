@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D签到</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background: url(./img/led2.png);
+            background-size: cover;
+            /*background-color: #000000;*/
+            margin: 0;
+            font-family: Helvetica, sans-serif;;
+            overflow: hidden;
+        }
+
+        a {
+            color: #ffffff;
+        }
+
+        #info {
+            position: absolute;
+            width: 100%;
+            color: #ffffff;
+            padding: 5px;
+            font-family: Monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            box-shadow: 0px 0px 12px rgba(197,59,58,0.5);
+            border: 1px solid rgba(197,59,58,0.25);
+            text-align: center;
+            cursor: default;
+        }
+
+        .element:hover {
+            box-shadow: 0px 0px 12px rgba(197,59,58,0.75);
+            border: 1px solid rgba(197,59,58,0.75);
+        }
+
+        .element .number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(197,25595,58,0.75);
+        }
+
+        .element .symbol {
+            position: relative;
+            background-color: #fff;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            top: 0;
+            left: 0px;
+            right: 0px;
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 25px;
+            background-color: rgba(0,0,0, 0.75);
+            color: rgba(255,255,255,1);
+            width: 100px;
+            left: 50%;
+            margin-left: -50px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .fadeIn {
+            animation: fadeIn 5s;
+        }
+
+        .fadeOut {
+            animation: fadeOut 5s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeIn
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+        @keyframes fadeIn
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+        @-moz-keyframes fadeIn /* Firefox */
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+        @-webkit-keyframes fadeIn /* Safari 和 Chrome */
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+        @-o-keyframes fadeIn /* Opera */
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+
+        @keyframes fadeOut
+        {
+            10% {opacity: 0}
+            30% {opacity: 1}
+            70% {opacity: 0}
+            100% {opacity: 1}
+        }
+
+        @keyframes fadeOut
+        {
+            10% {opacity: 1}
+            30% {opacity: 0}
+            70% {opacity: 1}
+            100% {opacity: 0}
+        }
+
+        @-moz-keyframes fadeOut /* Firefox */
+        {
+            10% {opacity: 1}
+            30% {opacity: 0}
+            70% {opacity: 1}
+            100% {opacity: 0}
+        }
+
+        @-webkit-keyframes fadeOut /* Safari 和 Chrome */
+        {
+            10% {opacity: 1}
+            30% {opacity: 0}
+            70% {opacity: 1}
+            100% {opacity: 0}
+        }
+
+        @-o-keyframes fadeOut /* Opera */
+        {
+            10% {opacity: 1}
+            30% {opacity: 0}
+            70% {opacity: 1}
+            100% {opacity: 0}
+        }
+
+
+        button {
+            color: rgba(255,255,255,0.75);
+            background: #000000;
+            outline: 1px solid rgba(127,255,255,0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgba(0,255,255,0.5);
+        }
+        button:active {
+            color: #000000;
+            background-color: rgba(0,255,255,0.75);
+        }
+
+        .modal {
+            position: absolute;
+            left: 0;
+            top:0 ;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44,21,11,.75);
+            /*display: flex;*/
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+
+        .modalContainer {
+            width: 668px;
+            height: 251px;
+            background: url('./img/alertbg.png');
+            background-size: cover;
+        }
+
+        .awardContainer {
+            margin-top: 40px;
+            margin-left: 48px;
+            width: 338.5px;
+            height: 169.5px;
+            background: url('./img/alertred.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .awardContainer  img{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right:  40px;
+            margin-top: 10px;
+        }
+
+        .awardContainer div {
+          font-size: 18px;
+          color: white;
+          margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<script src="./three.min.js"></script>
+<script src="./tween.js"></script>
+<script src="./TrackballControls.js"></script>
+<script src="./CSS3DRenderer.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.17.1/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+
+<div id="container"></div>
+<div id="menu">
+    <button id="table">表格排列</button>
+    <button id="sphere">地球</button>
+    <button id="helix">环形</button>
+    <button id="grid">散列</button>
+    <button id="add">变换数据</button>
+    <button id="auto">自动变化</button>
+    <button id="closeAuto">关闭自动变化</button>
+    <button id="reset">重置</button>
+    <button id="draw">抽奖</button>
+</div>
+<div class="modal" id="modal" onclick="close">
+    <div class="modalContainer">
+        <div class="awardContainer">
+            <img src="./img/weixin.png" id="user">
+            <div>
+                <p id="team">支付产品中心</p>
+                <p id="name">张张张</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+  var wallName = 'test_wall_2';
+  var table = [];
+  var xi = 0;
+  var yi = 0;
+
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (0), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (1), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (2), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (3), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (4), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (5), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (6), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (7), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (8), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (9), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (10), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (11), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (12), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (4), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (5), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (13), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (14), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (23), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (24), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (27), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (28), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (31), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (32), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (15), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-3), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-2), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (-1), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (0), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (1), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (2), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (3), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (4), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (5), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (6), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (7), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (8), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (9), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (10), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (11), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (12), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (13), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (14), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (15), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (16), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (17), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (18), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (19), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (20), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (21), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (22), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (23), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (24), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (25), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (26), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (27), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (28), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (29), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (30), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (31), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (32), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (33), y: yi + (16), });
+table.push({img: './img/weixin.png', name: 'test',team: '',x: xi + (34), y: yi + (16), });
+
+
+for (var i = 0; i < table.length -1 ; i++){
+    table[i].id = i;
+}
+
+var curTablesStack = [
+
+];
+
+for (var i = 0; i < table.length - 1; i++ ) {
+  curTablesStack.push({id: table[i].id});
+}
+
+var preTablesStack = [
+
+];
+
+var isAuto = false;
+
+
+  var camera, scene, renderer;
+  var controls;
+
+  var objects = [];
+  var targets = { table: [], sphere: [], helix: [], grid: [] };
+
+  if(localStorage.getItem('curNum')) {
+    var curNum = localStorage.getItem('curNum');
+  } else {
+    var curNum = 0;
+  }
+
+
+
+
+axios({method: 'post', url: 'https://ebd.99bill.com/mkt-express/mkt/signWall/getAll', data: {signWallCode: wallName}}).then(function(res) {
+  var data = res.data;
+  if (data.errCode === '00') {
+    const list = data.list;
+    var url;
+    for (var i = 0 ; i < data.count; i++) {
+      url = list[i].headImgUrl || '';
+      preTablesStack.unshift({id: curTablesStack[0].id , node: list[i].id});
+      var curEle = document.getElementById(preTablesStack[0].id);
+      var curSy = curEle.childNodes[0];
+      var curDet = curEle.childNodes[1];
+      curEle.className = `${curEle.className} fadeIn`;
+      curDet.innerHTML = list[i].name;
+      curSy.src = url;
+      curTablesStack.shift();
+    }
+
+  } else {
+    alert('出错了....');
+    return;
+  }
+  wallSocket();
+});
+
+  init();
+  animate();
+
+
+  function wallSocket() {
+      var socket = io.connect('https://ebd.99bill.com/mkt/signWall',{path: '/mkt-express/ws',transport : ['websocket'],
+	    'connect timeout': 500,
+        'reconnect': true,
+        'reconnection delay': 500,
+        'reopen delay': 500,
+        'max reconnection attempts': 10
+      });
+	  socket.on(wallName+'_add', function (data) {
+		console.log('add:');
+		console.log(data);
+
+		var url = data.headImgUrl || '';
+
+        preTablesStack.unshift({id: curTablesStack[0].id , node: data.id});
+        var curEle = document.getElementById(preTablesStack[0].id);
+        var curSy = curEle.childNodes[0];
+        var curDet = curEle.childNodes[1];
+        curEle.className = `${curEle.className} fadeIn`;
+        curDet.innerHTML = data.name;
+        curSy.src = url;
+        curTablesStack.shift();
+
+	  });
+	  socket.on(wallName+'_update', function (data) {
+		console.log('update:');
+		console.log(data);
+
+        var url = data.headImgUrl || '';
+        for (var i = 0; i < preTablesStack.length -1 ; i++ ) {
+          console.log(preTablesStack[i].node);
+          console.log(data.id);
+          if (preTablesStack[i].node === data.id ) {
+            var curEle = document.getElementById(preTablesStack[i].id);
+            var curSy = curEle.childNodes[0];
+            var curDet = curEle.childNodes[1];
+            curEle.className = 'elementx';
+            curEle.className = 'element fadeIn';
+            curDet.innerHTML = data.name;
+            curSy.src = url;
+          }
+
+        }
+	  });
+	  socket.on(wallName+'_delete', function (data) {
+		console.log('delete:');
+		console.log(data);
+
+        for (var i = 0; i < preTablesStack.length -1 ; i++ ) {
+          if (preTablesStack[i].node === data.id ) {
+            var curEle = document.getElementById(preTablesStack[i].id);
+            var curSy = curEle.childNodes[0];
+            var curDet = curEle.childNodes[1];
+            curEle.className = 'element';
+            curDet.innerHTML = 'test';
+            curSy.src = './img/weixin.png';
+            delete preTablesStack[i].node;
+            curTablesStack.unshift(preTablesStack[i]);
+          }
+
+        }
+	  });
+  }
+  function init() {
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = 4800;
+
+    scene = new THREE.Scene();
+
+    // table
+
+    for ( var i = 0; i < table.length; i ++ ) {
+      var element = document.createElement( 'div' );
+      element.className = 'element';
+      element.id = i;
+      element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+
+      var symbol = document.createElement( 'img' );
+      symbol.className = 'symbol';
+      symbol.src = table[ i ].img;
+      element.appendChild( symbol );
+
+      var details = document.createElement( 'div' );
+      details.className = 'details';
+      details.innerHTML = table[ i ].name;
+      element.appendChild( details );
+
+      var object = new THREE.CSS3DObject( element );
+      object.position.x = Math.random() * 4000 - 2000;
+      object.position.y = Math.random() * 4000 - 2000;
+      object.position.z = Math.random() * 4000 - 2000;
+      scene.add( object );
+
+      objects.push( object );
+
+      //
+
+      var object = new THREE.Object3D();
+      object.position.x = ( table[i].x * 140 ) - 1330;
+      object.position.y = - ( table[i].y * 180 ) + 990;
+
+      targets.table.push( object );
+
+    }
+
+    // sphere
+
+    var vector = new THREE.Vector3();
+    var spherical = new THREE.Spherical();
+
+    for ( var i = 0, l = objects.length; i < l; i ++ ) {
+      var phi = Math.acos( -1 + ( 2 * i ) / l );
+      var theta = Math.sqrt( l * Math.PI ) * phi;
+
+      var object = new THREE.Object3D();
+
+      spherical.set( 800, phi, theta );
+
+      object.position.setFromSpherical( spherical );
+
+      vector.copy( object.position ).multiplyScalar( 2 );
+
+      object.lookAt( vector );
+
+      targets.sphere.push( object );
+
+    }
+
+    // helix
+
+    var vector = new THREE.Vector3();
+    var cylindrical = new THREE.Cylindrical();
+
+    for ( var i = 0, l = objects.length; i < l; i ++ ) {
+
+      var theta = i * 0.175 + Math.PI;
+      var y = - ( i * 8 ) + 450;
+
+      var object = new THREE.Object3D();
+
+      cylindrical.set( 900, theta, y );
+
+      object.position.setFromCylindrical( cylindrical );
+
+      vector.x = object.position.x * 2;
+      vector.y = object.position.y;
+      vector.z = object.position.z * 2;
+
+      object.lookAt( vector );
+
+      targets.helix.push( object );
+
+    }
+
+    // grid
+
+    for ( var i = 0; i < objects.length; i ++ ) {
+
+      var object = new THREE.Object3D();
+
+      object.position.x = ( ( i % 5 ) * 400 ) - 800;
+      object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
+      object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
+
+      targets.grid.push( object );
+
+    }
+
+    renderer = new THREE.CSS3DRenderer();
+    renderer.setSize( window.innerWidth - 400, window.innerHeight );
+    renderer.domElement.style.position = 'relative';
+    renderer.domElement.style.left = '90px';
+    renderer.domElement.style.display = 'flex';
+    document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+    //
+
+    controls = new THREE.TrackballControls( camera, renderer.domElement );
+    controls.rotateSpeed = 0.5;
+    controls.minDistance = 500;
+    controls.maxDistance = 9000;
+    controls.addEventListener( 'change', render );
+
+    transform( targets.table, 2800 );
+
+//    var timer = setInterval(function(){
+//      setTimeout(function() {
+//        transform( targets.sphere, 2800 );
+//      },4000);
+//
+//      setTimeout(function() {
+//        transform( targets.helix, 2800 );
+//      },8000);
+//
+//      setTimeout(function() {
+//        transform( targets.grid, 2800 );
+//      },12000);
+//
+//      setTimeout(function() {
+//        transform( targets.table, 2800 );
+//      },16000);
+//      if(!isAuto){//满足某个条件时 清除定时器
+//        clearInterval(timer);
+//      }
+//    },1000);
+
+    var button = document.getElementById( 'table' );
+    button.addEventListener( 'click', function ( event ) {
+
+      transform( targets.table, 2000 );
+
+    }, false );
+
+    var button = document.getElementById( 'sphere' );
+    button.addEventListener( 'click', function ( event ) {
+
+      transform( targets.sphere, 2000 );
+
+    }, false );
+
+    var button = document.getElementById( 'helix' );
+    button.addEventListener( 'click', function ( event ) {
+
+      transform( targets.helix, 2000 );
+
+    }, false );
+
+    var button = document.getElementById( 'grid' );
+    button.addEventListener( 'click', function ( event ) {
+
+      transform( targets.grid, 2000 );
+
+    }, false );
+
+    var button = document.getElementById( 'add' );
+
+    button.addEventListener( 'click', function ( event ) {
+        var curEle = document.getElementById(curNum);
+        var curSy = curEle.childNodes[0];
+        var curDet = curEle.childNodes[0];
+
+      curEle.className = `${curEle.className} fadeIn`;
+
+      setTimeout(function () {
+        curSy.src = './img/test.jpeg';
+      },3500);
+
+
+    curNum = curNum + 1;
+    }, false );
+
+    var button = document.getElementById( 'draw' );
+
+    button.addEventListener( 'click', function ( event ) {
+      reset();
+      setTimeout(function() {
+        transform( targets.sphere, 2800 );
+      },1000);
+
+      setTimeout(function() {
+        transform( targets.helix, 2800 );
+      },3800);
+
+      setTimeout(function() {
+        transform( targets.grid, 2800 );
+      },5800);
+
+      setTimeout(function() {
+        transform( targets.table, 2800 );
+      },7000);
+
+      setTimeout(function() {
+        draw();
+      },10000);
+
+
+    }, false );
+
+    var button = document.getElementById('reset');
+
+    button.addEventListener('click',function(event) {
+      reset();
+      transform( targets.table, 2800 );
+    });
+
+//    var button = document.getElementById('auto');
+//
+//    button.addEventListener('click',function(event) {
+//      timer();
+//      isAuto = false;
+//    });
+//
+//    var button = document.getElementById('closeAuto');
+//
+//    var button = document.getElementById('click',function (event) {
+//      isAuto = true;
+//      reset();
+//      transform( targets.table, 2800 );
+//    });
+
+
+    document.getElementById('modal').addEventListener('click',function() {
+      document.getElementById('modal').style.display = 'none';
+    });
+
+
+
+    transform( targets.table, 2000 );
+
+    //
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+  }
+
+  function transform( targets, duration ) {
+
+    TWEEN.removeAll();
+
+    for ( var i = 0; i < objects.length; i ++ ) {
+
+      var object = objects[ i ];
+      var target = targets[ i ];
+
+      new TWEEN.Tween( object.position )
+          .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+          .easing( TWEEN.Easing.Exponential.InOut )
+          .start();
+
+      new TWEEN.Tween( object.rotation )
+          .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+          .easing( TWEEN.Easing.Exponential.InOut )
+          .start();
+
+    }
+
+    new TWEEN.Tween( this )
+        .to( {}, duration * 2 )
+        .onUpdate( render )
+        .start();
+
+  }
+
+  function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    render();
+
+  }
+
+  function animate() {
+
+    requestAnimationFrame( animate );
+
+    TWEEN.update();
+
+    controls.update();
+
+  }
+
+  function render() {
+
+    renderer.render( scene, camera );
+
+  }
+
+  function rnd(n, m){
+    var random = Math.floor(Math.random()*(m-n+1)+n);
+    return random;
+  }
+
+  function draw() {
+    var url = 'https://ebd.99bill.com/mkt-express/mkt/signWall/lottery';
+    var method = 'post';
+    var data = {number: 1,signWallCode: wallName};
+
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('user').src = '';
+    document.getElementById('team').innerHTML = '';
+    document.getElementById('name').innerHTML = '';
+
+    axios({method: method, url: url, data: data}).then(function(res){
+      var data = res.data;
+      var list = res.data.list[0];
+      if (data.errCode === '00') {
+        for (var i = 0; i< table.length; i++) {
+          var curEle = document.getElementById(i);
+          curEle.className = `${curEle.className} fadeOut`;
+        }
+        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('user').src = list.headImgUrl;
+        document.getElementById('team').innerHTML = list.organization;
+        document.getElementById('name').innerHTML = list.name;
+      } else {
+
+      }
+
+
+
+
+    }).catch(function(error){
+
+    });
+
+
+  }
+
+  function reset() {
+    for (var i = 0; i< table.length; i++) {
+      var curEle = document.getElementById(i);
+      curEle.className = 'element';
+    }
+  }
+
+</script>
+</body>
+</html>
